@@ -1,0 +1,11 @@
+resource "aws_kms_key" "main" {
+  description = var.project_name
+  tags = {
+    "Owner" = "ZEE8CA"
+  }
+}
+
+resource "aws_kms_alias" "main" {
+  name          = format("alias/%s/", var.project_name)
+  target_key_id = aws_kms_key.main.key_id
+}
