@@ -10,22 +10,22 @@ resource "aws_eks_access_entry" "fargate" {
   type          = "FARGATE_LINUX"
 }
 
-# resource "aws_eks_access_entry" "argocd" {
-#   cluster_name  = aws_eks_cluster.main.id
-#   principal_arn = var.argocd_deployer_role
-#   type          = "STANDARD"
+resource "aws_eks_access_entry" "argocd" {
+  cluster_name  = aws_eks_cluster.main.id
+  principal_arn = var.argocd_deployer_role
+  type          = "STANDARD"
 
-#   kubernetes_groups = [
-#     "cluster-admin"
-#   ]
-# }
+  kubernetes_groups = [
+    "cluster-admin"
+  ]
+}
 
-# resource "aws_eks_access_policy_association" "argocd" {
-#   cluster_name  = aws_eks_cluster.main.id
-#   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-#   principal_arn = var.argocd_deployer_role
+resource "aws_eks_access_policy_association" "argocd" {
+  cluster_name  = aws_eks_cluster.main.id
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterA dminPolicy"
+  principal_arn = var.argocd_deployer_role
 
-#   access_scope {
-#     type = "cluster"
-#   }
-# }
+  access_scope {
+    type = "cluster"
+  }
+}

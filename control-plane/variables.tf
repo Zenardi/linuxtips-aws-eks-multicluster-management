@@ -16,6 +16,9 @@ variable "ssm_subnets" {
   type = list(string)
 }
 
+variable "ssm_lb_subnets" {
+  type = list(string)
+}
 
 variable "node_group_temp_desired" {
   type    = number
@@ -38,4 +41,15 @@ variable "karpenter_capacity" {
 
 variable "argocd_deployer_role" {
   default = "arn:aws:iam::181560427716:role/linuxtips-control-plane-argocd-deployer"
+}
+
+variable "clusters_configs" {
+  default = [
+    {
+      cluster_name = "linuxtips-cluster-01"
+    },
+    {
+      cluster_name = "linuxtips-cluster-02"
+    }
+  ]
 }

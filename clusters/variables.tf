@@ -36,5 +36,5 @@ variable "karpenter_capacity" {
 }
 
 variable "argocd_deployer_role" {
-  default = "arn:aws:iam::181560427716:role/linuxtips-control-plane-argocd-deployer"
+  default = "arn:aws:iam::396913736573:role/linuxtips-control-plane-argocd-deployer"
 }
