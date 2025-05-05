@@ -12,6 +12,10 @@ export AWS_CA_BUNDLE="" # Se atras de proxy
 
 # Criar S3 Bucket (variavel bucket em backend.tfvars)
 
+# Criar rede (networking)
+cd networking
+terraform apply --auto-approve -var-file=environment/prod/terraform.tfvars
+
 # Executar apply
 bash apply.sh
 
