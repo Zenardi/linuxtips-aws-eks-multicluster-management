@@ -22,6 +22,7 @@ data "aws_iam_policy_document" "nodes" {
 resource "aws_iam_role" "eks_nodes_role" {
   name               = format("%s-nodes-role", var.project_name)
   assume_role_policy = data.aws_iam_policy_document.nodes.json
+  tags               = var.tags
 }
 
 
@@ -54,4 +55,5 @@ resource "aws_iam_role_policy_attachment" "cloudwatch" {
 resource "aws_iam_instance_profile" "nodes" {
   name = var.project_name
   role = aws_iam_role.eks_nodes_role.name
+  tags = var.tags
 }

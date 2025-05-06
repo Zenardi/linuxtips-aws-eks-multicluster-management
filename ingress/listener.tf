@@ -17,6 +17,8 @@ resource "aws_lb_listener" "http" {
       }
     }
   }
+
+  tags = var.tags
 }
 
 # Precisa de dominio (e.g. route 53)

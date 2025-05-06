@@ -24,9 +24,9 @@ resource "aws_eks_node_group" "main" {
     "compute-type"  = "ec2"
   }
 
-  tags = {
+  tags = concat({
     "kubernetes.io/cluster/${var.project_name}" = "owned"
-  }
+  }, var.tags)
 
   depends_on = [
     aws_eks_access_entry.nodes

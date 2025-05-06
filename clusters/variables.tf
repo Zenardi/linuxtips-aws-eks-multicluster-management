@@ -38,3 +38,14 @@ variable "karpenter_capacity" {
 variable "argocd_deployer_role" {
   default = "arn:aws:iam::396913736573:role/linuxtips-control-plane-argocd-deployer"
 }
+
+variable "tags" {
+  type = object({
+    Owner = string
+    Name  = string
+  })
+  default = {
+    Owner = "ZEE8CA"
+    Name  = "linuxtips-clusters"
+  }
+}

@@ -11,7 +11,7 @@ resource "aws_eks_addon" "cni" {
   addon_version               = data.aws_eks_addon_version.cni.version
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
-
+  tags                        = var.tags
   depends_on = [
     aws_eks_access_entry.nodes
   ]
@@ -53,7 +53,7 @@ resource "aws_eks_addon" "kubeproxy" {
   addon_version               = data.aws_eks_addon_version.kubeproxy.version
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
-
+  tags                        = var.tags
   depends_on = [
     aws_eks_access_entry.nodes
   ]
@@ -75,7 +75,7 @@ resource "aws_eks_addon" "pod_identity" {
   addon_version               = data.aws_eks_addon_version.pod_identity.version
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
-
+  tags                        = var.tags
   depends_on = [
     aws_eks_access_entry.nodes
   ]

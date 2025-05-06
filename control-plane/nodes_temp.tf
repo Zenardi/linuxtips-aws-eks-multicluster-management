@@ -37,5 +37,4 @@ resource "aws_eks_node_group" "main" {
     update = "2h"
     delete = "2h"
   }
-
 }

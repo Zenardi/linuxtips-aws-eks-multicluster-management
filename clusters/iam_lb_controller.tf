@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "aws_lb_role" {
 resource "aws_iam_role" "aws_lb_controller" {
   assume_role_policy = data.aws_iam_policy_document.aws_lb_role.json
   name               = format("%s-aws-load-balancer", var.project_name)
+  tags               = var.tags
 }
 
 data "aws_iam_policy_document" "aws_lb_policy" {
@@ -121,6 +122,7 @@ resource "aws_iam_policy" "aws_lb_policy" {
   description = var.project_name
 
   policy = data.aws_iam_policy_document.aws_lb_policy.json
+  tags   = var.tags
 }
 
 resource "aws_iam_policy_attachment" "aws_lb_policy" {

@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "chartmuseum_role" {
 resource "aws_iam_role" "chartmuseum_role" {
   assume_role_policy = data.aws_iam_policy_document.chartmuseum_role.json
   name               = format("%s-chartmuseum", var.project_name)
+  tags               = var.tags
 }
 
 data "aws_iam_policy_document" "chartmuseum_policy" {
@@ -45,6 +46,7 @@ resource "aws_iam_policy" "chartmuseum_policy" {
   description = var.project_name
 
   policy = data.aws_iam_policy_document.chartmuseum_policy.json
+  tags   = var.tags
 }
 
 resource "aws_iam_policy_attachment" "chartmuseum" {
@@ -61,4 +63,5 @@ resource "aws_eks_pod_identity_association" "chartmuseum" {
   namespace       = "chartmuseum"
   service_account = "chartmuseum"
   role_arn        = aws_iam_role.chartmuseum_role.arn
+  tags            = var.tags
 }

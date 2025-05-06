@@ -28,8 +28,8 @@ resource "aws_eks_cluster" "main" {
     enabled = true
   }
 
-  tags = {
+  tags = concat({
     "kubernetes.io/cluster/${var.project_name}" = "shared"
-  }
+  }, var.tags)
 
 }

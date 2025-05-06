@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "karpenter" {
 resource "aws_iam_role" "karpenter" {
   assume_role_policy = data.aws_iam_policy_document.karpenter.json
   name               = format("%s-karpenter", var.project_name)
+  tags               = var.tags
 }
 
 
@@ -62,6 +63,7 @@ resource "aws_iam_policy" "karpenter" {
   name   = format("%s-karpenter", var.project_name)
   path   = "/"
   policy = data.aws_iam_policy_document.karpenter_policy.json
+  tags   = var.tags
 }
 
 
@@ -79,4 +81,5 @@ resource "aws_eks_pod_identity_association" "karpenter" {
   namespace       = "karpenter"
   service_account = "karpenter"
   role_arn        = aws_iam_role.karpenter.arn
+  tags            = var.tags
 }

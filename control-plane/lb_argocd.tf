@@ -14,9 +14,7 @@ resource "aws_lb" "main" {
     aws_security_group.main.id
   ]
 
-  tags = {
-    Name = var.project_name
-  }
+  tags = var.tags
 
 }
 
@@ -31,6 +29,7 @@ resource "aws_lb_target_group" "argo" {
     path    = "/"
     matcher = "200-404"
   }
+  tags = var.tags
 }
 
 
@@ -50,6 +49,7 @@ resource "aws_lb_listener" "argocd" {
       }
     }
   }
+  tags = var.tags
 }
 
 resource "aws_security_group" "main" {
@@ -71,7 +71,5 @@ resource "aws_security_group" "main" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = var.project_name
-  }
+  tags = var.tags
 }

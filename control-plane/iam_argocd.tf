@@ -17,6 +17,7 @@ data "aws_iam_policy_document" "argocd_assume_role" {
 resource "aws_iam_role" "argocd" {
   assume_role_policy = data.aws_iam_policy_document.argocd_assume_role.json
   name               = format("%s-argocd", var.project_name)
+  tags               = var.tags
 }
 
 data "aws_iam_policy_document" "argocd_policy" {
@@ -44,6 +45,7 @@ resource "aws_iam_policy" "argocd_policy" {
   description = var.project_name
 
   policy = data.aws_iam_policy_document.argocd_policy.json
+  tags   = var.tags
 }
 
 resource "aws_iam_policy_attachment" "argocd_policy" {
@@ -59,6 +61,7 @@ resource "aws_eks_pod_identity_association" "argo_server" {
   namespace       = "argocd"
   service_account = "argocd-server"
   role_arn        = aws_iam_role.argocd.arn
+  tags            = var.tags
 }
 
 resource "aws_eks_pod_identity_association" "argo_application_controller" {
@@ -66,6 +69,7 @@ resource "aws_eks_pod_identity_association" "argo_application_controller" {
   namespace       = "argocd"
   service_account = "argocd-application-controller"
   role_arn        = aws_iam_role.argocd.arn
+  tags            = var.tags
 }
 
 resource "aws_eks_pod_identity_association" "argo_applicationset_controller" {
@@ -73,4 +77,5 @@ resource "aws_eks_pod_identity_association" "argo_applicationset_controller" {
   namespace       = "argocd"
   service_account = "argocd-applicationset-controller"
   role_arn        = aws_iam_role.argocd.arn
+  tags            = var.tags
 }

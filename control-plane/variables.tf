@@ -53,3 +53,14 @@ variable "clusters_configs" {
     }
   ]
 }
+
+variable "tags" {
+  type = object({
+    Owner = string
+    Name  = string
+  })
+  default = {
+    Owner = "ZEE8CA"
+    Name  = "linuxtips-control-plane"
+  }
+}

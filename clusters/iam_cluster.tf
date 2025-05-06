@@ -15,12 +15,12 @@ data "aws_iam_policy_document" "cluster" {
       ]
     }
   }
-
 }
 
 resource "aws_iam_role" "eks_cluster_role" {
   name               = format("%s-cluster-role", var.project_name)
   assume_role_policy = data.aws_iam_policy_document.cluster.json
+  tags               = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
