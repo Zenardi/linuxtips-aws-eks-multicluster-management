@@ -44,3 +44,13 @@ terraform init -backend-config=environment/prod/backend.tfvars
 
 terraform destroy -var-file=environment/prod/terraform.tfvars --auto-approve
 
+
+cd ../networking
+
+echo "Destroy do networking"
+
+rm -rf  .terraform
+
+terraform init -backend-config=environment/prod/backend.tfvars
+
+terraform destroy -var-file=environment/prod/terraform.tfvars --auto-approve
