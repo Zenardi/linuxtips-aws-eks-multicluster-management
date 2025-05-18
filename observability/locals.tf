@@ -1,6 +1,6 @@
 locals {
   grafana = {
-    values: <<-VALUES
+    values : <<-VALUES
 adminUser: admin
 adminPassword: linuxtips        
         
@@ -29,11 +29,17 @@ datasources:
         jsonData:
           maxLines: 1000
 
+      - name: Tempo
+        type: tempo
+        access: proxy
+        url: http://tempo-gateway.tempo.svc.cluster.local
+        basicAuth: false
+
   VALUES
   }
 
   loki = {
-    values: <<-VALUES
+    values : <<-VALUES
 loki:
     auth_enabled: false
     schemaConfig:
@@ -105,4 +111,55 @@ minio:
 
     VALUES
   }
+
+  tempo = {
+    values : <<-VALUES
+storage:
+    trace:
+        backend: s3
+        s3:
+            bucket: ${aws_s3_bucket.tempo.id}
+            region: ${var.region}
+            endpoint: s3.amazonaws.com
+            forcepathstyle: false
+gateway:
+    enabled: true
+    replicas: 3
+    service:
+        type: NodePort
+    nodeSelector:
+        karpenter.sh/nodepool: tempo
+queryFrontend:
+    replicas: 3
+    query:
+        enabled: false
+    nodeSelector:
+        karpenter.sh/nodepool: tempo       
+querier:
+    replicas: 3
+    nodeSelector:
+        karpenter.sh/nodepool: tempo       
+distributor:
+    enabled: true
+    replicas: 3
+    nodeSelector:
+        karpenter.sh/nodepool: tempo           
+ingester:
+    replicas: 3
+    nodeSelector:
+        karpenter.sh/nodepool: tempo     
+compactor:
+    replicas: 3
+    nodeSelector:
+        karpenter.sh/nodepool: tempo       
+traces:
+    otlp:
+        http:
+            enabled: true
+    grpc:
+        enabled: true
+    VALUES
+  }
+
+
 }

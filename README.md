@@ -22,3 +22,14 @@ bash apply.sh
 # Destruir
 bash destroy.sh
 ```
+
+## Teste
+```shell
+Ajuste os hosts e headers para o seu DNS ou seu Load Balancer
+
+curl --location 'http://${LOAD_BALANCER_HOST}/calculator' \
+  --header 'Content-Type: application/json' \
+  --header 'Host: health.zenardi.com.br' \
+  --data-raw '{ "age": 26, "weight": 90.0, "height": 1.77, "gender": "M", "activity_intensity": "very_active" }' \
+    -iv
+```
