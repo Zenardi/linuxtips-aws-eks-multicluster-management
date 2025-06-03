@@ -28,12 +28,29 @@ datasources:
         isDefault: false
         jsonData:
           maxLines: 1000
+          derivedFields:
+          - datasourceName: Tempo
+            datasourceUid: Tempo
+            matcherRegex: '\\"traceID\\":\\"([^\\"]+)\\"'
+            name: traceID
+            url: $$${__value.raw}
+
 
       - name: Tempo
         type: tempo
         access: proxy
         url: http://tempo-gateway.tempo.svc.cluster.local
         basicAuth: false
+        jsonData:
+          tracesToMetrics:
+            datasourceUid: 'Mimir'
+          serviceMap:
+            datasourceUid: 'Mimir'
+          nodeGraph:
+            enabled: true
+          tracesToLogs:
+            datasourceUid: 'Loki'
+
 
       - name: Mimir
         type: prometheus
@@ -41,8 +58,8 @@ datasources:
         url: http://mimir-nginx.mimir.svc.cluster.local:80/prometheus
         isDefault: true
         jsonData:
-        prometheusType: Mimir
-    
+          prometheusType: Mimir
+          
 
   VALUES
   }
@@ -167,8 +184,31 @@ traces:
             enabled: true
     grpc:
         enabled: true
+
+metricsGenerator:
+  enabled: true
+  registry:
+    external_labels:
+      source: tempo
+  config: 
+    storage:
+      remote_write: 
+      - url: "http://mimir-nginx.mimir.svc.cluster.local:80/api/v1/push"
+        send_exemplars: true
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: [service-graphs, span-metrics, local-blocks]
+
+global_overrides:
+  defaults:
+    metrics_generator:
+      processors: [service-graphs, span-metrics, local-blocks]
+
     VALUES
   }
+
 
   mimir = {
     values : <<-VALUES
@@ -200,8 +240,10 @@ mimir:
         endpoint: s3.${var.region}.amazonaws.com
         bucket_name: ${aws_s3_bucket.mimir_ruler.id}
         insecure: false
+
 alertmanager:
   enabled: false
+
 compactor:
   persistentVolume:
     storageClass: gp3
@@ -227,6 +269,7 @@ distributor:
     karpenter.sh/nodepool: mimir
   persistence:
     storageClass: gp3
+
 ingester:
   persistentVolume:
     storageClass: gp3
@@ -240,11 +283,14 @@ ingester:
       memory: 4Gi
   nodeSelector:
     karpenter.sh/nodepool: mimir
+
   zoneAwareReplication:
     enabled: false
+
 admin-cache:
   enabled: false
   replicas: 3
+
 chunks-cache:
   enabled: true
   replicas: 3
@@ -252,6 +298,7 @@ chunks-cache:
     karpenter.sh/nodepool: mimir  
   persistence:
     storageClass: gp3
+
 index-cache:
   enabled: true
   replicas: 3
@@ -259,6 +306,7 @@ index-cache:
     karpenter.sh/nodepool: mimir  
   persistence:
     storageClass: gp3
+
 metadata-cache:
   enabled: true
   replicas: 3
@@ -266,6 +314,7 @@ metadata-cache:
     karpenter.sh/nodepool: mimir  
   persistence:
     storageClass: gp3
+
 results-cache:
   enabled: true
   replicas: 3
@@ -273,8 +322,10 @@ results-cache:
     karpenter.sh/nodepool: mimir  
   persistence:
     storageClass: gp3
+
 minio:
   enabled: false
+
 overrides_exporter:
   replicas: 1
   resources:
@@ -348,6 +399,7 @@ store_gateway:
           topologyKey: 'kubernetes.io/hostname'
   zoneAwareReplication:
     topologyKey: 'kubernetes.io/hostname'
+
 nginx:
   replicas: 3
   resources:
@@ -359,7 +411,8 @@ nginx:
   service:
     type: NodePort
   nodeSelector:
-    karpenter.sh/nodepool: mimir  
+    karpenter.sh/nodepool: mimir
+
 gateway:
   replicas: 3
   resources:
@@ -370,6 +423,7 @@ gateway:
       memory: 512Mi
   nodeSelector:
     karpenter.sh/nodepool: mimir
+
     VALUES
   }
 
